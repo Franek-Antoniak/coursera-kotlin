@@ -1,3 +1,5 @@
+package playground.problems
+
 class Words {
     private val list = mutableListOf<String>()
 

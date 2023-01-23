@@ -1,3 +1,5 @@
+package playground.problems
+
 fun String.isClear(): Boolean {
     val set = hashSetOf("bu", "ba", "be")
     return this.zipWithNext().map { it.first.toString() + it.second }.none { set.contains(it) }

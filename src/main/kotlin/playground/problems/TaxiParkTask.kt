@@ -1,4 +1,4 @@
-package taxipark
+package playground.problems
 
 /*
  * Task #1. Find all the drivers who performed no trips.

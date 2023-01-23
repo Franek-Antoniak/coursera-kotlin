@@ -1,3 +1,5 @@
+package playground.problems
+
 fun fibonacci(): Sequence<Int> = sequence {
     var stack = 0 to 1
     while (true) {

@@ -1,3 +1,5 @@
+package playground.problems
+
 fun List<Int>.allNonZero() =  all { it != 0 }
 fun List<Int>.allNonZero1() =  none { it == 0 }
 fun List<Int>.allNonZero2() =  !any { it == 0 }

@@ -1,3 +1,5 @@
+package playground.problems
+
 fun main(args: Array<String>) {
     val s1: String? = null
     val s2: String? = ""

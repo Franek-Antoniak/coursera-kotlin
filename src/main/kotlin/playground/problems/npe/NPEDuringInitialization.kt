@@ -1,4 +1,4 @@
-package npe
+package playground.problems.npe
 
 open class A(open val value: String) {
     init {
@@ -9,6 +9,6 @@ open class A(open val value: String) {
 class B(override val value: String) : A(value)
 
 fun main(args: Array<String>) {
-    val a = B("npe")
+    val a = B("playground/problems/npeyground/problems/npe")
 
 }

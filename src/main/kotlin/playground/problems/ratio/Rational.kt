@@ -1,6 +1,6 @@
-package ratio
+package playground.problems.ratio
 
-import ratio.Rational.Companion.create
+import playground.problems.ratio.Rational.Companion.create
 import java.math.BigInteger
 
 @Suppress("DataClassPrivateConstructor")

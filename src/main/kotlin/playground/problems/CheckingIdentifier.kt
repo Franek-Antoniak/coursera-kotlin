@@ -1,3 +1,5 @@
+package playground.problems
+
 fun isValidIdentifier(s: String): Boolean = s.matches(Regex("""[a-zA-Z_]\w*"""))
 
 fun main() {

@@ -1,3 +1,5 @@
+package playground.problems
+
 interface X {
     var first: Int
     var second: Int

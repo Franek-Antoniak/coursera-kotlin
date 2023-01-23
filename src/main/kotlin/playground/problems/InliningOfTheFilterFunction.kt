@@ -1,3 +1,5 @@
+package playground.problems
+
 fun filterNonZero(list: List<Int>) = list.filter { it != 0 }
 
 fun filterNonZeroGenerated(list: List<Int>): List<Int> {

@@ -1,3 +1,5 @@
+package playground.problems
+
 class A {
     private lateinit var
             prop: String

@@ -1,4 +1,4 @@
-package board
+package playground.problems.board
 
 open class SquareBoardImpl(override val width: Int) : SquareBoard {
     private val map: MutableMap<Pair<Int, Int>, Cell> = run {

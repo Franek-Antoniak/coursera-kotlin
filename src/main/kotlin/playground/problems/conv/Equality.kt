@@ -1,4 +1,4 @@
-package conv
+package playground.problems.conv
 
 data class Value(val s: String)
 

@@ -1,3 +1,5 @@
+package playground.problems
+
 var counter = 0
 val foo: Int
     get() = counter++
