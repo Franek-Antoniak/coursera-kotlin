@@ -1,69 +1,47 @@
 package ratio
 
+import ratio.Rational.Companion.create
 import java.math.BigInteger
 
-
-class Rational(var numerator: BigInteger, var denominator: BigInteger) : Comparable<Rational> {
-    init {
-        require(denominator != 0.toBigInteger()) { "Denominator must not be zero" }
-        unify()
-    }
-
-    override fun toString(): String {
-        unify()
-        return if (denominator == 1.toBigInteger()) {
-            "$numerator"
-        } else {
-            "$numerator/$denominator"
+@Suppress("DataClassPrivateConstructor")
+data class Rational
+private constructor(val numerator: BigInteger, val denominator: BigInteger) : Comparable<Rational> {
+    companion object {
+        fun create(numerator: BigInteger, denominator: BigInteger) = unify(numerator, denominator)
+        private fun unify(numerator: BigInteger, denominator: BigInteger): Rational {
+            require(denominator != 0.toBigInteger()) { "Denominator must not be zero" }
+            val n = if (numerator.signum() * denominator.signum() < 0) -numerator.abs() else numerator
+                .abs()
+            val d = denominator.abs()
+            val gcd = numerator.gcd(denominator).abs()
+            return Rational(n / gcd, d / gcd)
         }
     }
 
-    private fun unify(): Rational {
-        repairSign()
-        reduceFraction()
-        return this
-    }
-
-    private fun repairSign() {
-        numerator = if (numerator.signum() * denominator.signum() < 0) -numerator.abs() else numerator.abs()
-        denominator = denominator.abs()
-    }
-
-    private fun reduceFraction() {
-        val gcd = numerator.gcd(denominator).abs()
-        numerator /= gcd
-        denominator /= gcd
-    }
-
-    override fun equals(other: Any?): Boolean {
-        if (other == null || other !is Rational) return false
-        return numerator * other.denominator == denominator * other.numerator
-    }
-
-    override fun hashCode(): Int {
-        return numerator.hashCode() * 31 + denominator.hashCode()
+    override fun toString(): String {
+        return if (denominator == 1.toBigInteger()) "$numerator" else "$numerator/$denominator"
     }
 
     operator fun plus(other: Rational): Rational {
         val newNumerator = numerator * other.denominator + other.numerator * denominator
         val newDenominator = denominator * other.denominator
-        return Rational(newNumerator, newDenominator).unify()
+        return create(newNumerator, newDenominator)
     }
 
     operator fun minus(other: Rational): Rational {
         val newNumerator = numerator * other.denominator - other.numerator * denominator
         val newDenominator = denominator * other.denominator
-        return Rational(newNumerator, newDenominator).unify()
+        return create(newNumerator, newDenominator)
     }
 
     operator fun times(other: Rational): Rational {
         val newNumerator = numerator * other.numerator
         val newDenominator = denominator * other.denominator
-        return Rational(newNumerator, newDenominator).unify()
+        return create(newNumerator, newDenominator)
     }
 
     operator fun unaryMinus(): Rational {
-        return Rational(-numerator, denominator)
+        return create(-numerator, denominator)
     }
 
     override operator fun compareTo(other: Rational): Int {
@@ -73,50 +51,34 @@ class Rational(var numerator: BigInteger, var denominator: BigInteger) : Compara
     operator fun div(other: Rational): Rational {
         val newNumerator = numerator * other.denominator
         val newDenominator = denominator * other.numerator
-        return Rational(newNumerator, newDenominator).unify()
-    }
-
-    operator fun rangeTo(other: Rational) = RationalRange(this, other)
-
-    class RationalRange(
-        override val start: Rational,
-        override val endInclusive: Rational
-    ) : ClosedRange<Rational> {
-
-        override fun equals(other: Any?): Boolean {
-            return other is RationalRange && (isEmpty() && other.isEmpty() ||
-                    start == other.start && endInclusive == other.endInclusive)
-        }
-
-        override fun hashCode(): Int {
-            return if (isEmpty()) -1 else 31 * start.hashCode() + endInclusive.hashCode()
-        }
-
-        override fun toString(): String = "$start..$endInclusive"
+        return create(newNumerator, newDenominator)
     }
 }
 
+
 infix fun Int.divBy(i: Int): Rational {
-    return Rational(this.toBigInteger(), i.toBigInteger())
+    return create(this.toBigInteger(), i.toBigInteger())
 }
 
 fun String.toRational(): Rational {
-    val (numerator, denominator) = split("/").let {
-        if (it.size == 1) {
-            it[0] to "1"
-        } else {
-            it[0] to it[1]
-        }
+    fun String.toBigIntegerOrFail(): BigInteger = this.toBigIntegerOrNull()
+        ?: throw IllegalArgumentException(
+            "String must be in format 'numerator/denominator' or 'numerator', was: " +
+                    this@toRational
+        )
+    if (!contains("/")) {
+        return create(toBigIntegerOrFail(), 1.toBigInteger())
     }
-    return Rational(numerator.toBigInteger(), denominator.toBigInteger())
+    val (n, d) = split("/")
+    return create(n.toBigIntegerOrFail(), d.toBigIntegerOrFail())
 }
 
 infix fun Long.divBy(l: Long): Rational {
-    return Rational(this.toBigInteger(), l.toBigInteger())
+    return create(this.toBigInteger(), l.toBigInteger())
 }
 
 infix fun BigInteger.divBy(other: BigInteger): Rational {
-    return Rational(this, other)
+    return create(this, other)
 }
 
 
